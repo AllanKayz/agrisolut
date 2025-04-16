@@ -4,20 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plant Disease Detection</title>
-  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="app">
-    <h1>Plant Disease Detection</h1>
-    <input type="file" id="imageUpload" accept="image/*">
-    <div id="imagePreviewContainer">
-      <img id="imagePreview" src="" alt="Image Preview">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-6">Plant Disease Detection</h1>
+    <input type="file" id="imageUpload" accept="image/*" class="block w-full border border-gray-300 rounded-lg p-2 mb-4">
+    <div id="imagePreviewContainer" class="mb-4">
+      <img id="imagePreview" src="" alt="Image Preview" class="max-w-full max-h-64 border border-gray-300 rounded-lg">
     </div>
-    <button id="detectButton">Detect</button>
-    <div id="results">
-      <h2>Results</h2>
-      <p id="diseaseName">Disease: <span>-</span></p>
-      <p id="confidence">Confidence: <span>-</span></p>
+    <button id="detectButton" class="w-full bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition">
+      Detect
+    </button>
+    <div id="results" class="mt-6">
+      <h2 class="text-xl font-semibold mb-4">Results</h2>
+      <p id="diseaseName" class="text-gray-700">Disease: <span class="font-bold">-</span></p>
+      <p id="confidence" class="text-gray-700">Confidence: <span class="font-bold">-</span></p>
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ml5/0.12.2/ml5.min.js"></script>

@@ -1,0 +1,13 @@
+{
+  "name": "agrisolut-backend",
+  "version": "1.0.0",
+  "description": "Backend for AgriSolut plant disease detection",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "express": "^4.17.1"
+  }
+}

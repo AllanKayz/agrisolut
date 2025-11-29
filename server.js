@@ -20,11 +20,46 @@ app.post('/classify', async (req, res) => {
   }
 });
 
+app.post('/plantid', async (req, res) => {
+  try {
+    const { image } = req.body;
+    const base64Image = image.split(',')[1];
+    const buffer = Buffer.from(base64Image, 'base64');
+
+    const form = new FormData();
+    form.append('images', buffer, {
+      filename: 'image.jpg',
+      contentType: 'image/jpeg',
+    });
+
+    const fetch = (await import('node-fetch')).default;
+    const response = await fetch('https://api.plant.id/v3/health_assessment', {
+      method: 'POST',
+      headers: {
+        'Api-Key': process.env.PLANT_ID_API_KEY,
+        ...form.getHeaders(),
+      },
+      body: form,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error from Plant.id API: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    res.json(result);
+  } catch (error) {
+    console.error('Error with Plant.id fallback:', error);
+    res.status(500).send('Error with Plant.id fallback');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const FormData = require('form-data');
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 

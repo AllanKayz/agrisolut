@@ -74,30 +74,6 @@ uploadButton.addEventListener('click', () => {
   cameraButton.classList.remove('hidden');
 });
 
-function stopCamera() {
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-    stream = null;
-  }
-}
-
-// Event listeners for drag and drop
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.classList.add('bg-gray-100');
-});
-
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('bg-gray-100');
-});
-
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('bg-gray-100');
-  const file = e.dataTransfer.files[0];
-  handleFile(file);
-});
-
 // Load the pre-trained ml5.js model
 let classifier;
 const loaderText = loader.querySelector('p');
@@ -111,7 +87,7 @@ ml5.imageClassifier('MobileNet')
   })
   .catch(err => {
     console.error('Error loading model:', err);
-    loaderText.textContent = 'Error loading fallback model.';
+    loader.querySelector('p').textContent = 'Error loading model.';
   });
 
 // Detect the plant disease
@@ -132,7 +108,7 @@ detectButton.addEventListener('click', async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ image: base64Image, mimeType: uploadedFile ? uploadedFile.type : 'image/jpeg' }),
+      body: JSON.stringify({ image: base64Image, mimeType: uploadedFile.type }),
     });
 
     if (!response.ok) {

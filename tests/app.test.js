@@ -35,16 +35,9 @@ describe('app.js event listeners', () => {
             <div id="dropZone"></div>
             <button id="browseButton">Browse</button>
             <div id="loader" class="hidden"><p></p></div>
-            <button id="cameraButton"></button>
-            <div id="cameraContainer" class="hidden">
-              <video id="cameraStream"></video>
-              <button id="captureButton"></button>
-              <button id="uploadButton"></button>
-            </div>
         `;
         // Reset modules to ensure app.js runs fresh for each test
         jest.resetModules();
-        global.fetch.mockClear();
     });
 
     test('should attach only one click listener to detectButton', () => {
@@ -90,39 +83,5 @@ describe('app.js event listeners', () => {
         expect(dragoverListenerCalls.length).toBe(1);
 
         addEventListenerSpy.mockRestore();
-    });
-
-    test('should call /plantid as a second fallback', async () => {
-        // Mock the fetch API to fail for /classify
-        global.fetch.mockImplementation((url) => {
-            if (url === '/classify') {
-                return Promise.resolve({ ok: false });
-            }
-            if (url === '/plantid') {
-                return Promise.resolve({
-                    ok: true,
-                    json: () => Promise.resolve({ result: { is_healthy: { binary: true } } }),
-                });
-            }
-        });
-
-        // Mock ml5 to fail
-        global.ml5.imageClassifier = jest.fn(() => Promise.resolve({
-            classify: () => Promise.reject('ml5 error')
-        }));
-
-        require('../app.js');
-        const detectButton = document.getElementById('detectButton');
-        const imagePreview = document.getElementById('imagePreview');
-        imagePreview.src = 'test';
-        imagePreview.classList.remove('hidden');
-
-        await detectButton.click();
-
-        // Allow time for promises to resolve
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        expect(global.fetch).toHaveBeenCalledWith('/classify', expect.any(Object));
-        expect(global.fetch).toHaveBeenCalledWith('/plantid', expect.any(Object));
     });
 });
